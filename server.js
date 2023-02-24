@@ -1,55 +1,17 @@
-const express = require("express");
-const app = express();
-const { Restaurant } = require("./models/index");
+
+const express = require("express"); //import the express module ()
+const app = express(); //create an express application
+// const { Restaurant } = require("./models/index"); //import the Restaurant model
 const { sequelize } = require("./db");
+
 const port = 3000;
+app.use(express.json());
 
-app.use(express.json())
+const restaurantRouter = require("./routers/restRouter");
 
+app.use("/restaurants", restaurantRouter);
 
-
-//TODO: Create your GET Request Route Below:
-app.get("/restaurants/:id", async (req, res, next) => { 
-const restaurant = await Restaurant.findByPk(req.params.id);  
-res.json(restaurant);});
-
-
-
-app.post("/restaurants", async (req, res) => {
-    const { name, location, cuisine } = req.body;
-    if ((name, location, cuisine)) {
-      await Restaurant.create({
-        name: name,
-        location: location,
-        cuisine: cuisine,
-      });
-    }
-    res.send(201);});
-
-app.put("/restaurants/:id", async (req, res) => {
-    const { name, location, cuisine } = req.body;
-    if ((name, location, cuisine)) {
-      await Restaurant.update(
-        {
-          name: name,
-          location: location,
-          cuisine: cuisine,
-        },
-        { where: { id: req.params.id } }
-      );
-    }
-    res.send(200);
-  }
-);
-
-app.delete("/restaurants/:id", async (req, res) => {
-    await Restaurant.destroy({ where: { id: req.params.id } });
-    res.send(200);
-  }
-);
-
-app.listen(port, () => {
-    sequelize.sync();
-    console.log("Your server is listening on port " + port);
-    }
-);
+const server = app.listen(3000, function () {
+  // the listen() method listens for connections on the host and the port number
+  console.log("Node server is running on http://localhost:3000..");
+});
